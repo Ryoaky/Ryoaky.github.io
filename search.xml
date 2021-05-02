@@ -1,9 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>html布局：居中效果</title>
+    <url>/2021/05/01/html%E5%B8%83%E5%B1%80%EF%BC%9A%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C/</url>
+    <content><![CDATA[<h1><span id="html布局居中效果">html布局：居中效果</span></h1><!-- toc -->
+
+<ul>
+<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E6%96%87%E6%9C%AC">居中效果: 文本</a><ul>
+<li><a href="#%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">文本：水平居中</a></li>
+<li><a href="#%E6%96%87%E6%9C%AC%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">文本：垂直居中</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C%E5%9D%97%E5%85%83%E7%B4%A0">居中效果：块元素</a><ul>
+<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">相对父元素：水平居中</a></li>
+<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">相对父元素： 垂直居中</a></li>
+<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E5%85%A8%E5%B1%80%E5%B1%85%E4%B8%AD">相对父元素：全局居中</a></li>
+<li><a href="#%E4%BD%BF%E5%AD%90%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">使子元素： 垂直居中</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87">居中效果: 背景图片</a></li>
+</ul>
+<!-- tocstop -->
+
+<h2><span id="居中效果-文本">居中效果: 文本</span></h2><h3><span id="文本水平居中">文本：水平居中</span></h3><blockquote>
+<ol>
+<li><p>设置text-align:</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">text-align</span>: center;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h3><span id="文本垂直居中">文本：垂直居中</span></h3><blockquote>
+<ol>
+<li><p>设置行高等于容器高度(单行文本)</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">height</span>: <span class="number">25px</span>;</span><br><span class="line"><span class="attribute">line-height</span>: <span class="number">25px</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h2><span id="居中效果块元素">居中效果：块元素</span></h2><h3><span id="相对父元素水平居中">相对父元素：水平居中</span></h3><blockquote>
+<ol>
+<li><p>设置margin</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">margin</span>：<span class="number">0</span> <span class="attribute">auto</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h3><span id="相对父元素-垂直居中">相对父元素： 垂直居中</span></h3><blockquote>
+<ol start="2">
+<li><p>使用绝对定位</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身高度确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h3><span id="相对父元素全局居中">相对父元素：全局居中</span></h3><blockquote>
+<ol>
+<li><p>使用绝对定位</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身宽高度都确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto;</span><br></pre></td></tr></table></figure></li>
+<li><p>通过transform居中(css3)</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">left</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">transform</span>:<span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h3><span id="使子元素-垂直居中">使子元素： 垂直居中</span></h3><blockquote>
+<ol>
+<li><p>使用display</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">display</span>:table-cell;</span><br><span class="line"><span class="attribute">vertical-align</span>: middle;</span><br></pre></td></tr></table></figure></li>
+<li><p>父元素高度auto,设置上下padding一致</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">padding</span>:  <span class="number">2px</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+<h2><span id="居中效果-背景图片">居中效果: 背景图片</span></h2><blockquote>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">background-position</span>: center;</span><br></pre></td></tr></table></figure>
+</blockquote>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+      <tags>
+        <tag>布局</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>javascript类型转换</title>
     <url>/2021/05/02/avascript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</url>
-    <content><![CDATA[<h1><span id="javascript类型转换">javascript类型转换</span></h1><p>[TOC]</p>
+    <content><![CDATA[<h1><span id="javascript类型转换">javascript类型转换</span></h1><!-- toc -->
+
+<ul>
+<li><a href="#javascript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">javascript数据类型</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BF%90%E7%AE%97%E7%AC%A6typeof">类型运算符typeof</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96-string">其他-&gt;String</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96-number">其他-&gt;Number</a></li>
+<li><a href="#%E5%85%B6%E4%BB%96-boolean">其他-&gt;Boolean</a></li>
+</ul>
+<!-- tocstop -->
+
 <h2><span id="javascript数据类型">javascript数据类型</span></h2><table>
 <thead>
 <tr>
@@ -82,79 +165,6 @@
       </categories>
       <tags>
         <tag>javascript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>html布局：居中效果</title>
-    <url>/2021/05/01/html%E5%B8%83%E5%B1%80%EF%BC%9A%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C/</url>
-    <content><![CDATA[<h1><span id="html布局居中效果">html布局：居中效果</span></h1><!-- toc -->
-
-<ul>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E6%96%87%E6%9C%AC">居中效果: 文本</a><ul>
-<li><a href="#%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">文本：水平居中</a></li>
-<li><a href="#%E6%96%87%E6%9C%AC%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">文本：垂直居中</a></li>
-</ul>
-</li>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C%E5%9D%97%E5%85%83%E7%B4%A0">居中效果：块元素</a><ul>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">相对父元素：水平居中</a></li>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">相对父元素： 垂直居中</a></li>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E5%85%A8%E5%B1%80%E5%B1%85%E4%B8%AD">相对父元素：全局居中</a></li>
-<li><a href="#%E4%BD%BF%E5%AD%90%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">使子元素： 垂直居中</a></li>
-</ul>
-</li>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87">居中效果: 背景图片</a></li>
-</ul>
-<!-- tocstop -->
-
-<h2><span id="居中效果-文本">居中效果: 文本</span></h2><h3><span id="文本水平居中">文本：水平居中</span></h3><blockquote>
-<ol>
-<li><p>设置text-align:</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">text-align</span>: center;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="文本垂直居中">文本：垂直居中</span></h3><blockquote>
-<ol>
-<li><p>设置行高等于容器高度(单行文本)</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">height</span>: <span class="number">25px</span>;</span><br><span class="line"><span class="attribute">line-height</span>: <span class="number">25px</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="居中效果块元素">居中效果：块元素</span></h2><h3><span id="相对父元素水平居中">相对父元素：水平居中</span></h3><blockquote>
-<ol>
-<li><p>设置margin</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">margin</span>：<span class="number">0</span> <span class="attribute">auto</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="相对父元素-垂直居中">相对父元素： 垂直居中</span></h3><blockquote>
-<ol start="2">
-<li><p>使用绝对定位</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身高度确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="相对父元素全局居中">相对父元素：全局居中</span></h3><blockquote>
-<ol>
-<li><p>使用绝对定位</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身宽高度都确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto;</span><br></pre></td></tr></table></figure></li>
-<li><p>通过transform居中(css3)</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">left</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">transform</span>:<span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="使子元素-垂直居中">使子元素： 垂直居中</span></h3><blockquote>
-<ol>
-<li><p>使用display</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">display</span>:table-cell;</span><br><span class="line"><span class="attribute">vertical-align</span>: middle;</span><br></pre></td></tr></table></figure></li>
-<li><p>父元素高度auto,设置上下padding一致</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">padding</span>:  <span class="number">2px</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="居中效果-背景图片">居中效果: 背景图片</span></h2><blockquote>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">background-position</span>: center;</span><br></pre></td></tr></table></figure>
-</blockquote>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-      <tags>
-        <tag>布局</tag>
       </tags>
   </entry>
 </search>
