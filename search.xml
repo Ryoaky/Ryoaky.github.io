@@ -1,335 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>javascript事件的绑定，委派，冒泡等</title>
-    <url>/2021/05/04/avascript%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BB%91%E5%AE%9A%EF%BC%8C%E5%A7%94%E6%B4%BE%EF%BC%8C%E5%86%92%E6%B3%A1%E7%AD%89/</url>
-    <content><![CDATA[<h1><span id="javascript事件绑定冒泡委派默认事件">javascript事件绑定，冒泡，委派，默认事件</span></h1><!-- toc -->
-
-<ul>
-<li><a href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A">事件绑定</a></li>
-<li><a href="#%E5%8F%96%E6%B6%88%E9%BB%98%E8%AE%A4%E4%BA%8B%E4%BB%B6">取消默认事件</a></li>
-<li><a href="#%E5%8F%96%E6%B6%88%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1">取消事件冒泡</a></li>
-<li><a href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%B4%BE">事件委派</a></li>
-</ul>
-<!-- tocstop -->
-
-<h2><span id="事件绑定">事件绑定</span></h2><blockquote>
-<ol>
-<li><p>使用element.onxxx方法绑定事件</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//绑定</span></span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//解绑</span></span><br><span class="line">btn.onclick = <span class="literal">null</span></span><br><span class="line">   </span><br><span class="line"><span class="comment">//缺点：只能绑定一个，如果绑定多个，则先前绑定的被覆盖</span></span><br></pre></td></tr></table></figure></li>
-<li><p>使用addEventListener()</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//绑定</span></span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="string">&quot;绑定了点击事件&quot;</span>);</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//解绑，如果要解绑，则绑定时的回调函数不能为匿名函数</span></span><br><span class="line"><span class="keyword">var</span> fun = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,fun,<span class="literal">false</span>)</span><br><span class="line">btn.removeEventListener(<span class="string">&quot;click&quot;</span>, fun)</span><br><span class="line"></span><br><span class="line"><span class="comment">//此方法不兼容IE8</span></span><br></pre></td></tr></table></figure></li>
-<li><p>兼容IE8的绑定方法</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bind</span>(<span class="params">obj , eventStr , callback</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(obj.addEventListener)&#123;</span><br><span class="line">		<span class="comment">//大部分浏览器兼容的方式</span></span><br><span class="line">		obj.addEventListener(eventStr, callback, <span class="literal">false</span>);</span><br><span class="line">	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">		<span class="comment">//IE8及以下</span></span><br><span class="line">		obj.attachEvent(<span class="string">&quot;on&quot;</span>+eventStr, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		callback.call(obj);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="取消默认事件">取消默认事件</span></h2><blockquote>
-<p>在绑定事件时，return false</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    	alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">    	<span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2><span id="取消事件冒泡">取消事件冒泡</span></h2><blockquote>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    event = event || <span class="built_in">window</span>.event;</span><br><span class="line"> 	alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">    <span class="comment">//取消事件冒泡</span></span><br><span class="line"> 	event.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h2><span id="事件委派">事件委派</span></h2><blockquote>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">u1.onclick = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">	event = event || <span class="built_in">window</span>.event;</span><br><span class="line">	<span class="comment">// event中的target表示的触发事件的对象</span></span><br><span class="line">    <span class="comment">//如果触发事件的对象是我们期望的元素，则执行否则不执行</span></span><br><span class="line">    <span class="keyword">if</span>(event.target.className == <span class="string">&quot;link&quot;</span>)&#123;</span><br><span class="line">        alert(<span class="string">&quot;事件委派&quot;</span>);</span><br><span class="line">    &#125;				</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></blockquote>
-]]></content>
+<search> 
+  
+  
+    
+    <entry>
+      <title>javascript原型链继承</title>
+      <link href="2021/05/04/avascript%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF/"/>
+      <url>2021/05/04/avascript%E5%8E%9F%E5%9E%8B%E9%93%BE%E7%BB%A7%E6%89%BF/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="原型链继承">原型链继承</span></h1><blockquote><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Super</span>(<span class="params">prop</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.superprop = prop</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Super.prototype.superfun = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;父类的方法&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Sub</span>(<span class="params">prop</span>)</span>&#123;</span><br><span class="line">    Super.call(<span class="built_in">this</span>,prop) <span class="comment">//通过这个得到父类的属性</span></span><br><span class="line"><span class="built_in">this</span>.subprop = prop</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//原型链继承，通过这个可以得到父类的方法</span></span><br><span class="line">Sub.prototype = <span class="keyword">new</span> Super(<span class="string">&quot;父类属性&quot;</span>)</span><br><span class="line"><span class="comment">//让子类型的原型的构造器指向子类型</span></span><br><span class="line">Sub.prototype.constuctor = Sub</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sub = <span class="keyword">new</span> Sub(<span class="string">&quot;子类属性&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(sub.superprop);</span><br><span class="line">sub.superfun();</span><br><span class="line"></span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
       <categories>
-        <category>javascript</category>
+          
+          <category> javascript </category>
+          
       </categories>
-  </entry>
-  <entry>
-    <title>javascript中this的取值</title>
-    <url>/2021/05/04/avascript%E4%B8%ADthis%E7%9A%84%E5%8F%96%E5%80%BC/</url>
-    <content><![CDATA[<h1><span id="javascript中this的取值">javascript中this的取值</span></h1><blockquote>
-<ol>
-<li><p>以函数的形式调用时，this都是window</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">fun()</span><br></pre></td></tr></table></figure></li>
-<li><p>以方法的形式调用时，this就是调用方法的那个对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    fun: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		alert(<span class="built_in">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.fun()</span><br></pre></td></tr></table></figure></li>
-<li><p>当以构造函数的形式调用时，this就是新创建的那个对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="function"><span class="title">Fun</span>(<span class="params">prop</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.prop = prop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> fun = <span class="keyword">new</span> Fun(<span class="string">&quot;prop&quot;</span>)</span><br></pre></td></tr></table></figure></li>
-<li><p>以call()或者apply()调用时，this是在作为参数传入的对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    prop: <span class="string">&quot;属性&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun.call(obj)</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>javascript多线程</title>
-    <url>/2021/05/04/avascript%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<h1><span id="多线程">多线程</span></h1><blockquote>
-<p>在主线程代码中</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="string">&quot;要向分线程发送的数据&quot;</span></span><br><span class="line"><span class="comment">//创建worker对象</span></span><br><span class="line"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">&#x27;worker.js&#x27;</span>)</span><br><span class="line"><span class="comment">//设置监听事件</span></span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;接受到分线程的数据&#x27;</span>+ event.data)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//向分线程发送消息</span></span><br><span class="line">worker.postMessage(data)</span><br></pre></td></tr></table></figure>
-
-<p>在分线程代码中</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;从主线程接受到数据&quot;</span>+ event.data)</span><br><span class="line">    <span class="comment">//处理数据</span></span><br><span class="line">    postMessage(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</blockquote>
-]]></content>
-  </entry>
-  <entry>
-    <title>javascript类型转换</title>
-    <url>/2021/05/02/avascript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</url>
-    <content><![CDATA[<span id="more"></span>
-<h1><span id="javascript类型转换">javascript类型转换</span></h1><!-- toc -->
-
-<ul>
-<li><a href="#javascript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">javascript数据类型</a></li>
-<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BF%90%E7%AE%97%E7%AC%A6">类型运算符</a></li>
-<li><a href="#%E5%85%B6%E4%BB%96-string">其他-&gt;String</a></li>
-<li><a href="#%E5%85%B6%E4%BB%96-number">其他-&gt;Number</a></li>
-<li><a href="#%E5%85%B6%E4%BB%96-boolean">其他-&gt;Boolean</a></li>
-</ul>
-<!-- tocstop -->
-
-<h2><span id="javascript数据类型">javascript数据类型</span></h2><table>
-<thead>
-<tr>
-<th>数据类型</th>
-<th>特殊值</th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Number</td>
-<td>NaN(非数字), Infinity</td>
-<td>数值</td>
-</tr>
-<tr>
-<td>String</td>
-<td>“”(空串)</td>
-<td>字符串</td>
-</tr>
-<tr>
-<td>Boolean</td>
-<td></td>
-<td>布尔值</td>
-</tr>
-<tr>
-<td>Null</td>
-<td></td>
-<td>不存在的对象</td>
-</tr>
-<tr>
-<td>undefined</td>
-<td></td>
-<td>未定义未初始化的值</td>
-</tr>
-<tr>
-<td>object</td>
-<td>function, Array</td>
-<td>对象</td>
-</tr>
-</tbody></table>
-<h2><span id="类型运算符">类型运算符</span></h2><blockquote>
-<p>typeof 返回变量数据类型</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//注意typeof是运算符，不是函数，注意用法</span></span><br><span class="line"><span class="keyword">var</span> a =<span class="number">123</span>;</span><br><span class="line">result = <span class="keyword">typeof</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br></pre></td></tr></table></figure>
-
-<p>instanceof 返回对象是否为某对象的实例</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">var per &#x3D; new Person();</span><br><span class="line">console.log(per instanceof Person)</span><br></pre></td></tr></table></figure>
-
-
-</blockquote>
-<h2><span id="其他-gtstring">其他-&gt;String</span></h2><blockquote>
-<ol>
-<li><p>使用拼串的方法, 加上一个字符串</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">123</span></span><br><span class="line">a = a + <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br></pre></td></tr></table></figure></li>
-<li><p>使用String()方法</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//此方法可转换null,undefined</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>(a));</span><br></pre></td></tr></table></figure></li>
-<li><p>使用变量的toString()方法</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//此方法不可转换null,undefined</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a.toString());	</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="其他-gtnumber">其他-&gt;Number</span></h2><blockquote>
-<ol>
-<li><p>使用parseInt()和parseFloat()</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123.456px&quot;</span>;</span><br><span class="line"><span class="comment">//parseInt取第一个字符开始有效的整数 </span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">parseInt</span>(a)); <span class="comment">//123</span></span><br><span class="line"><span class="comment">//parseFloat取第一个字符开始有效的浮点数</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">parseFloat</span>(a)); <span class="comment">//123.456</span></span><br></pre></td></tr></table></figure></li>
-<li><p>使用Number()方法</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 字符串有非数字时转换为NaN，空串转为0</span></span><br><span class="line"><span class="comment">// true转为1, false转为0</span></span><br><span class="line"><span class="comment">// null转为0</span></span><br><span class="line"><span class="comment">// undefined转为NaN</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Number</span>(a));</span><br></pre></td></tr></table></figure></li>
-<li><p>使用隐式类型转换</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//任何类型和Numberg做- * /运算时都会自动转换为Number、</span></span><br><span class="line"><span class="keyword">var</span> a =  <span class="string">&quot;123&quot;</span>;</span><br><span class="line">a = a - <span class="number">0</span>; </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br><span class="line">               </span><br><span class="line"><span class="comment">//还可使用一元运算符+和-,进行取正负号，此时先转换为Number值再取正负；</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="string">&quot;123&quot;</span>;</span><br><span class="line">b = +b; </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> b);</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="其他-gtboolean">其他-&gt;Boolean</span></h2><blockquote>
-<ol>
-<li><p>使用Boolean()函数</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//数字转boolean, 0和NaN为false,其余为true</span></span><br><span class="line"><span class="comment">//字符串转boolean, 空串为false,其余为true,包括&quot;true&quot;和&quot;false&quot;</span></span><br><span class="line"><span class="comment">//null和undefined为false,object会转为true</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Boolean</span>(a));</span><br></pre></td></tr></table></figure></li>
-<li><p>使用隐式类型转换</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// !运算会先将其他类型转换成boolean类型,再取反。所以可以通过两次取反转换为boolean值</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line">a = !!a;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-]]></content>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript事件的绑定，委派，冒泡等</title>
+      <link href="2021/05/04/avascript%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BB%91%E5%AE%9A%EF%BC%8C%E5%A7%94%E6%B4%BE%EF%BC%8C%E5%86%92%E6%B3%A1%E7%AD%89/"/>
+      <url>2021/05/04/avascript%E4%BA%8B%E4%BB%B6%E7%9A%84%E7%BB%91%E5%AE%9A%EF%BC%8C%E5%A7%94%E6%B4%BE%EF%BC%8C%E5%86%92%E6%B3%A1%E7%AD%89/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="javascript事件绑定冒泡委派默认事件">javascript事件绑定，冒泡，委派，默认事件</span></h1><!-- toc --><ul><li><a href="#%E4%BA%8B%E4%BB%B6%E7%BB%91%E5%AE%9A">事件绑定</a></li><li><a href="#%E5%8F%96%E6%B6%88%E9%BB%98%E8%AE%A4%E4%BA%8B%E4%BB%B6">取消默认事件</a></li><li><a href="#%E5%8F%96%E6%B6%88%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1">取消事件冒泡</a></li><li><a href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%B4%BE">事件委派</a></li></ul><!-- tocstop --><h2><span id="事件绑定">事件绑定</span></h2><blockquote><ol><li><p>使用element.onxxx方法绑定事件</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//绑定</span></span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//解绑</span></span><br><span class="line">btn.onclick = <span class="literal">null</span></span><br><span class="line">   </span><br><span class="line"><span class="comment">//缺点：只能绑定一个，如果绑定多个，则先前绑定的被覆盖</span></span><br></pre></td></tr></table></figure></li><li><p>使用addEventListener()</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//绑定</span></span><br><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">alert(<span class="string">&quot;绑定了点击事件&quot;</span>);</span><br><span class="line">&#125;,<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//解绑，如果要解绑，则绑定时的回调函数不能为匿名函数</span></span><br><span class="line"><span class="keyword">var</span> fun = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">&#125;</span><br><span class="line">btn.addEventListener(<span class="string">&quot;click&quot;</span>,fun,<span class="literal">false</span>)</span><br><span class="line">btn.removeEventListener(<span class="string">&quot;click&quot;</span>, fun)</span><br><span class="line"></span><br><span class="line"><span class="comment">//此方法不兼容IE8</span></span><br></pre></td></tr></table></figure></li><li><p>兼容IE8的绑定方法</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">bind</span>(<span class="params">obj , eventStr , callback</span>)</span>&#123;</span><br><span class="line"><span class="keyword">if</span>(obj.addEventListener)&#123;</span><br><span class="line"><span class="comment">//大部分浏览器兼容的方式</span></span><br><span class="line">obj.addEventListener(eventStr, callback, <span class="literal">false</span>);</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="comment">//IE8及以下</span></span><br><span class="line">obj.attachEvent(<span class="string">&quot;on&quot;</span>+eventStr, <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">callback.call(obj);</span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="取消默认事件">取消默认事件</span></h2><blockquote><p>在绑定事件时，return false</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></blockquote><h2><span id="取消事件冒泡">取消事件冒泡</span></h2><blockquote><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> btn = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;btn&#x27;</span>)</span><br><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    event = event || <span class="built_in">window</span>.event;</span><br><span class="line"> alert(<span class="string">&quot;绑定了点击事件&quot;</span>)</span><br><span class="line">    <span class="comment">//取消事件冒泡</span></span><br><span class="line"> event.cancelBubble = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></blockquote><h2><span id="事件委派">事件委派</span></h2><blockquote><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">u1.onclick = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">event = event || <span class="built_in">window</span>.event;</span><br><span class="line"><span class="comment">// event中的target表示的触发事件的对象</span></span><br><span class="line">    <span class="comment">//如果触发事件的对象是我们期望的元素，则执行否则不执行</span></span><br><span class="line">    <span class="keyword">if</span>(event.target.className == <span class="string">&quot;link&quot;</span>)&#123;</span><br><span class="line">        alert(<span class="string">&quot;事件委派&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
       <categories>
-        <category>javascript</category>
+          
+          <category> javascript </category>
+          
       </categories>
-      <tags>
-        <tag>javascript</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>javascript随机数生成</title>
-    <url>/2021/05/04/avascript%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90/</url>
-    <content><![CDATA[<span id="more"></span>
-<h1><span id="javascript任意范围的随机数生成">javascript任意范围的随机数生成</span></h1><blockquote>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//生成0~1的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.random()</span><br><span class="line"></span><br><span class="line"><span class="comment">//生成一个0~x的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random()*x)</span><br><span class="line"></span><br><span class="line"><span class="comment">//生成x~y的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.round((<span class="built_in">Math</span>.random() * y-x) + x)</span><br></pre></td></tr></table></figure></blockquote>
-]]></content>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript多线程</title>
+      <link href="2021/05/04/avascript%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+      <url>2021/05/04/avascript%E5%A4%9A%E7%BA%BF%E7%A8%8B/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="多线程">多线程</span></h1><blockquote><p>在主线程代码中</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="string">&quot;要向分线程发送的数据&quot;</span></span><br><span class="line"><span class="comment">//创建worker对象</span></span><br><span class="line"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">&#x27;worker.js&#x27;</span>)</span><br><span class="line"><span class="comment">//设置监听事件</span></span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;接受到分线程的数据&#x27;</span>+ event.data)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//向分线程发送消息</span></span><br><span class="line">worker.postMessage(data)</span><br></pre></td></tr></table></figure><p>在分线程代码中</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;从主线程接受到数据&quot;</span>+ event.data)</span><br><span class="line">    <span class="comment">//处理数据</span></span><br><span class="line">    postMessage(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript统计代码运行时间</title>
+      <link href="2021/05/04/avascript%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/"/>
+      <url>2021/05/04/avascript%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="统计运行时间">统计运行时间</span></h1><blockquote><ol><li>使用console.time;</li></ol><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//需要传入一个字符串作为计时器名字</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&quot;spend&quot;</span>);</span><br><span class="line"><span class="comment">//编写语句</span></span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&quot;spend&quot;</span>);</span><br></pre></td></tr></table></figure><ol start="2"><li><p>使用Date对象</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="comment">//待测试性能的代码</span></span><br><span class="line">   </span><br><span class="line"><span class="keyword">var</span> end = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;执行了&quot;</span> + end-start + <span class="string">&quot;毫秒&quot;</span>);</span><br></pre></td></tr></table></figure></li></ol></blockquote>]]></content>
+      
+      
       <categories>
-        <category>javascript</category>
+          
+          <category> javascript </category>
+          
       </categories>
-  </entry>
-  <entry>
-    <title>javascript统计代码运行时间</title>
-    <url>/2021/05/04/avascript%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/</url>
-    <content><![CDATA[<h1><span id="统计运行时间">统计运行时间</span></h1><blockquote>
-<ol>
-<li>使用console.time;</li>
-</ol>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">//需要传入一个字符串作为计时器名字</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&quot;spend&quot;</span>);</span><br><span class="line"><span class="comment">//编写语句</span></span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&quot;spend&quot;</span>);</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li><p>使用Date对象</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="comment">//待测试性能的代码</span></span><br><span class="line">   </span><br><span class="line"><span class="keyword">var</span> end = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;执行了&quot;</span> + end-start + <span class="string">&quot;毫秒&quot;</span>);</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-]]></content>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript中this的取值</title>
+      <link href="2021/05/04/avascript%E4%B8%ADthis%E7%9A%84%E5%8F%96%E5%80%BC/"/>
+      <url>2021/05/04/avascript%E4%B8%ADthis%E7%9A%84%E5%8F%96%E5%80%BC/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="javascript中this的取值">javascript中this的取值</span></h1><blockquote><ol><li><p>以函数的形式调用时，this都是window</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">fun()</span><br></pre></td></tr></table></figure></li><li><p>以方法的形式调用时，this就是调用方法的那个对象</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    fun: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">alert(<span class="built_in">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.fun()</span><br></pre></td></tr></table></figure></li><li><p>当以构造函数的形式调用时，this就是新创建的那个对象</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="function"><span class="title">Fun</span>(<span class="params">prop</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.prop = prop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> fun = <span class="keyword">new</span> Fun(<span class="string">&quot;prop&quot;</span>)</span><br></pre></td></tr></table></figure></li><li><p>以call()或者apply()调用时，this是在作为参数传入的对象</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    prop: <span class="string">&quot;属性&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun.call(obj)</span><br></pre></td></tr></table></figure></li></ol></blockquote>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript必须写分号的情况</title>
+      <link href="2021/05/04/javascript%E5%BF%85%E9%A1%BB%E5%86%99%E5%88%86%E5%8F%B7%E7%9A%84%E6%83%85%E5%86%B5/"/>
+      <url>2021/05/04/javascript%E5%BF%85%E9%A1%BB%E5%86%99%E5%88%86%E5%8F%B7%E7%9A%84%E6%83%85%E5%86%B5/</url>
+      
+        <content type="html"><![CDATA[<h1><span id="javascript必须加分号">javascript必须加分号</span></h1><span id="more"></span><blockquote><ul><li><p>小括号开头的前一条语句(即立即执行函数)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></li><li><p>中括号开头的前一条语句</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">4</span></span><br><span class="line">;[<span class="number">1</span>,<span class="number">3</span>].forEach(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li></ul></blockquote>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript坐标计算</title>
+      <link href="2021/05/04/javascript%E5%9D%90%E6%A0%87%E8%AE%A1%E7%AE%97/"/>
+      <url>2021/05/04/javascript%E5%9D%90%E6%A0%87%E8%AE%A1%E7%AE%97/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1><span id="javascript坐标计算">javascript坐标计算</span></h1><!-- toc --><ul><li><a href="#%E8%8E%B7%E5%8F%96%E5%AE%BD%E9%AB%98">获取宽高</a></li><li><a href="#%E8%8E%B7%E5%8F%96%E5%81%8F%E7%A7%BB%E9%87%8F">获取偏移量</a></li><li><a href="#%E5%B8%B8%E8%A7%81%E8%AE%A1%E7%AE%97">常见计算</a></li></ul><!-- tocstop --><h2><span id="获取宽高">获取宽高</span></h2><blockquote><ol><li><p>可见宽度和可见高度(content + padding)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.clientWidth); <span class="comment">//可见宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.clientHeight); <span class="comment">//可见高度</span></span><br></pre></td></tr></table></figure></li><li><p>获取元素高度宽度(content + padding + border)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetWidth); <span class="comment">//宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetHeight); <span class="comment">//高度</span></span><br></pre></td></tr></table></figure></li><li><p>获取元素滚动区域的宽高</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollWidth); <span class="comment">//宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollHeight); <span class="comment">//高度</span></span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="获取偏移量">获取偏移量</span></h2><blockquote><ol><li><p>获取元素相对其定位元素的偏移量</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetLeft); <span class="comment">//x</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetTop); <span class="comment">//y</span></span><br></pre></td></tr></table></figure></li><li><p>获取滚动条的偏移量</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollLeft); <span class="comment">//水平滚动条滚动距离</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollTop); <span class="comment">//垂直滚动条滚动距离</span></span><br></pre></td></tr></table></figure></li><li><p>事件发生时获取鼠标的坐标(相对于视口)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line">ele.onmousemove = <span class="function"><span class="keyword">function</span>(<span class="params">ev</span>)</span>&#123;</span><br><span class="line">    ev = ev||<span class="built_in">window</span>.event; <span class="comment">//兼容</span></span><br><span class="line">    <span class="keyword">var</span> x = ev.clientX;</span><br><span class="line">    <span class="keyword">var</span> y = ev.clientY;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;x = &quot;</span>+ x +<span class="string">&quot;, y=&quot;</span> + y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li><p>获取事件发生时鼠标的坐标(相对于页面)</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line">ele.onmousemove = <span class="function"><span class="keyword">function</span>(<span class="params">ev</span>)</span>&#123;</span><br><span class="line">    ev = ev||<span class="built_in">window</span>.event; <span class="comment">//兼容</span></span><br><span class="line">    <span class="keyword">var</span> x = ev.pageX;</span><br><span class="line">    <span class="keyword">var</span> y = ev.pageY;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;x = &quot;</span>+ x +<span class="string">&quot;, y=&quot;</span> + y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="常见计算">常见计算</span></h2><blockquote><ol><li><p>检测滚动条滚动到底</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span>(scrollHeight-scrollTop==clientHeight)&#123;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;垂直滚动条滚动到底了&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(scrollWidth-scrollLeft==clientWidth)&#123;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;水平滚动条滚动到底了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li></ol></blockquote>]]></content>
+      
+      
       <categories>
-        <category>javascript</category>
+          
+          <category> javascript </category>
+          
       </categories>
-  </entry>
-  <entry>
-    <title>html布局：居中效果</title>
-    <url>/2021/05/01/html%E5%B8%83%E5%B1%80%EF%BC%9A%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C/</url>
-    <content><![CDATA[<span id="more"></span>
-<h1><span id="html布局居中效果">html布局：居中效果</span></h1><!-- toc -->
-
-<ul>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E6%96%87%E6%9C%AC">居中效果: 文本</a><ul>
-<li><a href="#%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">文本：水平居中</a></li>
-<li><a href="#%E6%96%87%E6%9C%AC%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">文本：垂直居中</a></li>
-</ul>
-</li>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C%E5%9D%97%E5%85%83%E7%B4%A0">居中效果：块元素</a><ul>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">相对父元素：水平居中</a></li>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">相对父元素： 垂直居中</a></li>
-<li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E5%85%A8%E5%B1%80%E5%B1%85%E4%B8%AD">相对父元素：全局居中</a></li>
-<li><a href="#%E4%BD%BF%E5%AD%90%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">使子元素： 垂直居中</a></li>
-</ul>
-</li>
-<li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87">居中效果: 背景图片</a></li>
-</ul>
-<!-- tocstop -->
-
-<h2><span id="居中效果-文本">居中效果: 文本</span></h2><h3><span id="文本水平居中">文本：水平居中</span></h3><blockquote>
-<ol>
-<li><p>设置text-align:</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">text-align</span>: center;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="文本垂直居中">文本：垂直居中</span></h3><blockquote>
-<ol>
-<li><p>设置行高等于容器高度(单行文本)</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">height</span>: <span class="number">25px</span>;</span><br><span class="line"><span class="attribute">line-height</span>: <span class="number">25px</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="居中效果块元素">居中效果：块元素</span></h2><h3><span id="相对父元素水平居中">相对父元素：水平居中</span></h3><blockquote>
-<ol>
-<li><p>设置margin</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">margin</span>：<span class="number">0</span> <span class="attribute">auto</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="相对父元素-垂直居中">相对父元素： 垂直居中</span></h3><blockquote>
-<ol start="2">
-<li><p>使用绝对定位</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身高度确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="相对父元素全局居中">相对父元素：全局居中</span></h3><blockquote>
-<ol>
-<li><p>使用绝对定位</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身宽高度都确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto;</span><br></pre></td></tr></table></figure></li>
-<li><p>通过transform居中(css3)</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">left</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">transform</span>:<span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h3><span id="使子元素-垂直居中">使子元素： 垂直居中</span></h3><blockquote>
-<ol>
-<li><p>使用display</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">display</span>:table-cell;</span><br><span class="line"><span class="attribute">vertical-align</span>: middle;</span><br></pre></td></tr></table></figure></li>
-<li><p>父元素高度auto,设置上下padding一致</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">padding</span>:  <span class="number">2px</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="居中效果-背景图片">居中效果: 背景图片</span></h2><blockquote>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="attribute">background-position</span>: center;</span><br></pre></td></tr></table></figure>
-</blockquote>
-]]></content>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript随机数生成</title>
+      <link href="2021/05/04/avascript%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90/"/>
+      <url>2021/05/04/avascript%E9%9A%8F%E6%9C%BA%E6%95%B0%E7%94%9F%E6%88%90/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1><span id="javascript任意范围的随机数生成">javascript任意范围的随机数生成</span></h1><blockquote><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//生成0~1的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.random()</span><br><span class="line"></span><br><span class="line"><span class="comment">//生成一个0~x的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.round(<span class="built_in">Math</span>.random()*x)</span><br><span class="line"></span><br><span class="line"><span class="comment">//生成x~y的随机数</span></span><br><span class="line"><span class="built_in">Math</span>.round((<span class="built_in">Math</span>.random() * y-x) + x)</span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
       <categories>
-        <category>前端</category>
+          
+          <category> javascript </category>
+          
       </categories>
-      <tags>
-        <tag>布局</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>javascript坐标计算</title>
-    <url>/2021/05/04/javascript%E5%9D%90%E6%A0%87%E8%AE%A1%E7%AE%97/</url>
-    <content><![CDATA[<span id="more"></span>
-
-<h1><span id="javascript坐标计算">javascript坐标计算</span></h1><!-- toc -->
-
-<ul>
-<li><a href="#%E8%8E%B7%E5%8F%96%E5%AE%BD%E9%AB%98">获取宽高</a></li>
-<li><a href="#%E8%8E%B7%E5%8F%96%E5%81%8F%E7%A7%BB%E9%87%8F">获取偏移量</a></li>
-<li><a href="#%E5%B8%B8%E8%A7%81%E8%AE%A1%E7%AE%97">常见计算</a></li>
-</ul>
-<!-- tocstop -->
-
-<h2><span id="获取宽高">获取宽高</span></h2><blockquote>
-<ol>
-<li><p>可见宽度和可见高度(content + padding)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.clientWidth); <span class="comment">//可见宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.clientHeight); <span class="comment">//可见高度</span></span><br></pre></td></tr></table></figure></li>
-<li><p>获取元素高度宽度(content + padding + border)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetWidth); <span class="comment">//宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetHeight); <span class="comment">//高度</span></span><br></pre></td></tr></table></figure></li>
-<li><p>获取元素滚动区域的宽高</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollWidth); <span class="comment">//宽度</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollHeight); <span class="comment">//高度</span></span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="获取偏移量">获取偏移量</span></h2><blockquote>
-<ol>
-<li><p>获取元素相对其定位元素的偏移量</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetLeft); <span class="comment">//x</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.offsetTop); <span class="comment">//y</span></span><br></pre></td></tr></table></figure></li>
-<li><p>获取滚动条的偏移量</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollLeft); <span class="comment">//水平滚动条滚动距离</span></span><br><span class="line"><span class="built_in">console</span>.log(ele.scrollTop); <span class="comment">//垂直滚动条滚动距离</span></span><br></pre></td></tr></table></figure></li>
-<li><p>事件发生时获取鼠标的坐标(相对于视口)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line">ele.onmousemove = <span class="function"><span class="keyword">function</span>(<span class="params">ev</span>)</span>&#123;</span><br><span class="line">    ev = ev||<span class="built_in">window</span>.event; <span class="comment">//兼容</span></span><br><span class="line">    <span class="keyword">var</span> x = ev.clientX;</span><br><span class="line">    <span class="keyword">var</span> y = ev.clientY;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;x = &quot;</span>+ x +<span class="string">&quot;, y=&quot;</span> + y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-<li><p>获取事件发生时鼠标的坐标(相对于页面)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line">ele.onmousemove = <span class="function"><span class="keyword">function</span>(<span class="params">ev</span>)</span>&#123;</span><br><span class="line">    ev = ev||<span class="built_in">window</span>.event; <span class="comment">//兼容</span></span><br><span class="line">    <span class="keyword">var</span> x = ev.pageX;</span><br><span class="line">    <span class="keyword">var</span> y = ev.pageY;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;x = &quot;</span>+ x +<span class="string">&quot;, y=&quot;</span> + y);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-<h2><span id="常见计算">常见计算</span></h2><blockquote>
-<ol>
-<li><p>检测滚动条滚动到底</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> ele = <span class="built_in">document</span>.getElementById(<span class="string">&#x27;ele&#x27;</span>);</span><br><span class="line"><span class="keyword">if</span>(scrollHeight-scrollTop==clientHeight)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&quot;垂直滚动条滚动到底了&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span>(scrollWidth-scrollLeft==clientWidth)&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&quot;水平滚动条滚动到底了&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ol>
-</blockquote>
-]]></content>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>javascript类型转换</title>
+      <link href="2021/05/02/avascript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/"/>
+      <url>2021/05/02/avascript%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1><span id="javascript类型转换">javascript类型转换</span></h1><!-- toc --><ul><li><a href="#javascript%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">javascript数据类型</a></li><li><a href="#%E7%B1%BB%E5%9E%8B%E8%BF%90%E7%AE%97%E7%AC%A6">类型运算符</a></li><li><a href="#%E5%85%B6%E4%BB%96-string">其他-&gt;String</a></li><li><a href="#%E5%85%B6%E4%BB%96-number">其他-&gt;Number</a></li><li><a href="#%E5%85%B6%E4%BB%96-boolean">其他-&gt;Boolean</a></li></ul><!-- tocstop --><h2><span id="javascript数据类型">javascript数据类型</span></h2><table><thead><tr><th>数据类型</th><th>特殊值</th><th></th></tr></thead><tbody><tr><td>Number</td><td>NaN(非数字), Infinity</td><td>数值</td></tr><tr><td>String</td><td>“”(空串)</td><td>字符串</td></tr><tr><td>Boolean</td><td></td><td>布尔值</td></tr><tr><td>Null</td><td></td><td>不存在的对象</td></tr><tr><td>undefined</td><td></td><td>未定义未初始化的值</td></tr><tr><td>object</td><td>function, Array</td><td>对象</td></tr></tbody></table><h2><span id="类型运算符">类型运算符</span></h2><blockquote><p>typeof 返回变量数据类型</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注意typeof是运算符，不是函数，注意用法</span></span><br><span class="line"><span class="keyword">var</span> a =<span class="number">123</span>;</span><br><span class="line">result = <span class="keyword">typeof</span> a;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br></pre></td></tr></table></figure><p>instanceof 返回对象是否为某对象的实例</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var per &#x3D; new Person();</span><br><span class="line">console.log(per instanceof Person)</span><br></pre></td></tr></table></figure></blockquote><h2><span id="其他-gtstring">其他-&gt;String</span></h2><blockquote><ol><li><p>使用拼串的方法, 加上一个字符串</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">123</span></span><br><span class="line">a = a + <span class="string">&quot;&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br></pre></td></tr></table></figure></li><li><p>使用String()方法</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//此方法可转换null,undefined</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">String</span>(a));</span><br></pre></td></tr></table></figure></li><li><p>使用变量的toString()方法</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//此方法不可转换null,undefined</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="number">123</span>;</span><br><span class="line"><span class="built_in">console</span>.log(a.toString());</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="其他-gtnumber">其他-&gt;Number</span></h2><blockquote><ol><li><p>使用parseInt()和parseFloat()</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123.456px&quot;</span>;</span><br><span class="line"><span class="comment">//parseInt取第一个字符开始有效的整数 </span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">parseInt</span>(a)); <span class="comment">//123</span></span><br><span class="line"><span class="comment">//parseFloat取第一个字符开始有效的浮点数</span></span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">parseFloat</span>(a)); <span class="comment">//123.456</span></span><br></pre></td></tr></table></figure></li><li><p>使用Number()方法</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 字符串有非数字时转换为NaN，空串转为0</span></span><br><span class="line"><span class="comment">// true转为1, false转为0</span></span><br><span class="line"><span class="comment">// null转为0</span></span><br><span class="line"><span class="comment">// undefined转为NaN</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Number</span>(a));</span><br></pre></td></tr></table></figure></li><li><p>使用隐式类型转换</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//任何类型和Numberg做- * /运算时都会自动转换为Number、</span></span><br><span class="line"><span class="keyword">var</span> a =  <span class="string">&quot;123&quot;</span>;</span><br><span class="line">a = a - <span class="number">0</span>; </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> a);</span><br><span class="line">               </span><br><span class="line"><span class="comment">//还可使用一元运算符+和-,进行取正负号，此时先转换为Number值再取正负；</span></span><br><span class="line"><span class="keyword">var</span> b = <span class="string">&quot;123&quot;</span>;</span><br><span class="line">b = +b; </span><br><span class="line"><span class="built_in">console</span>.log(<span class="keyword">typeof</span> b);</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="其他-gtboolean">其他-&gt;Boolean</span></h2><blockquote><ol><li><p>使用Boolean()函数</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//数字转boolean, 0和NaN为false,其余为true</span></span><br><span class="line"><span class="comment">//字符串转boolean, 空串为false,其余为true,包括&quot;true&quot;和&quot;false&quot;</span></span><br><span class="line"><span class="comment">//null和undefined为false,object会转为true</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(<span class="built_in">Boolean</span>(a));</span><br></pre></td></tr></table></figure></li><li><p>使用隐式类型转换</p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// !运算会先将其他类型转换成boolean类型,再取反。所以可以通过两次取反转换为boolean值</span></span><br><span class="line"><span class="keyword">var</span> a = <span class="string">&quot;123&quot;</span>;</span><br><span class="line">a = !!a;</span><br><span class="line"><span class="built_in">console</span>.log(a);</span><br></pre></td></tr></table></figure></li></ol></blockquote>]]></content>
+      
+      
       <categories>
-        <category>javascript</category>
+          
+          <category> javascript </category>
+          
       </categories>
-  </entry>
-  <entry>
-    <title>javascript必须写分号的情况</title>
-    <url>/2021/05/04/javascript%E5%BF%85%E9%A1%BB%E5%86%99%E5%88%86%E5%8F%B7%E7%9A%84%E6%83%85%E5%86%B5/</url>
-    <content><![CDATA[<h1><span id="javascript必须加分号">javascript必须加分号</span></h1><span id="more"></span>
-
-<blockquote>
-<ul>
-<li><p>小括号开头的前一条语句(即立即执行函数)</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">;(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></li>
-<li><p>中括号开头的前一条语句</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">4</span></span><br><span class="line">;[<span class="number">1</span>,<span class="number">3</span>].forEach(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
-</ul>
-</blockquote>
-]]></content>
-  </entry>
+      
+      
+        <tags>
+            
+            <tag> javascript </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>html布局：居中效果</title>
+      <link href="2021/05/01/html%E5%B8%83%E5%B1%80%EF%BC%9A%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C/"/>
+      <url>2021/05/01/html%E5%B8%83%E5%B1%80%EF%BC%9A%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C/</url>
+      
+        <content type="html"><![CDATA[<span id="more"></span><h1><span id="html布局居中效果">html布局：居中效果</span></h1><!-- toc --><ul><li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E6%96%87%E6%9C%AC">居中效果: 文本</a><ul><li><a href="#%E6%96%87%E6%9C%AC%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">文本：水平居中</a></li><li><a href="#%E6%96%87%E6%9C%AC%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">文本：垂直居中</a></li></ul></li><li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C%E5%9D%97%E5%85%83%E7%B4%A0">居中效果：块元素</a><ul><li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E6%B0%B4%E5%B9%B3%E5%B1%85%E4%B8%AD">相对父元素：水平居中</a></li><li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">相对父元素： 垂直居中</a></li><li><a href="#%E7%9B%B8%E5%AF%B9%E7%88%B6%E5%85%83%E7%B4%A0%E5%85%A8%E5%B1%80%E5%B1%85%E4%B8%AD">相对父元素：全局居中</a></li><li><a href="#%E4%BD%BF%E5%AD%90%E5%85%83%E7%B4%A0-%E5%9E%82%E7%9B%B4%E5%B1%85%E4%B8%AD">使子元素： 垂直居中</a></li></ul></li><li><a href="#%E5%B1%85%E4%B8%AD%E6%95%88%E6%9E%9C-%E8%83%8C%E6%99%AF%E5%9B%BE%E7%89%87">居中效果: 背景图片</a></li></ul><!-- tocstop --><h2><span id="居中效果-文本">居中效果: 文本</span></h2><h3><span id="文本水平居中">文本：水平居中</span></h3><blockquote><ol><li><p>设置text-align:</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">text-align</span>: center;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h3><span id="文本垂直居中">文本：垂直居中</span></h3><blockquote><ol><li><p>设置行高等于容器高度(单行文本)</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">height</span>: <span class="number">25px</span>;</span><br><span class="line"><span class="attribute">line-height</span>: <span class="number">25px</span>;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="居中效果块元素">居中效果：块元素</span></h2><h3><span id="相对父元素水平居中">相对父元素：水平居中</span></h3><blockquote><ol><li><p>设置margin</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">margin</span>：<span class="number">0</span> <span class="attribute">auto</span>;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h3><span id="相对父元素-垂直居中">相对父元素： 垂直居中</span></h3><blockquote><ol start="2"><li><p>使用绝对定位</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身高度确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h3><span id="相对父元素全局居中">相对父元素：全局居中</span></h3><blockquote><ol><li><p>使用绝对定位</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*父元素开启相对定位*/</span></span><br><span class="line"><span class="comment">/*自身宽高度都确定*/</span></span><br><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">left</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">right</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">bottom</span>: <span class="number">0</span>;</span><br><span class="line"><span class="attribute">margin</span>: auto;</span><br></pre></td></tr></table></figure></li><li><p>通过transform居中(css3)</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">position</span>: absolute;</span><br><span class="line"><span class="attribute">top</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">left</span>:<span class="number">50%</span>;</span><br><span class="line"><span class="attribute">transform</span>:<span class="built_in">translate</span>(-<span class="number">50%</span>, -<span class="number">50%</span>);</span><br></pre></td></tr></table></figure></li></ol></blockquote><h3><span id="使子元素-垂直居中">使子元素： 垂直居中</span></h3><blockquote><ol><li><p>使用display</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">display</span>:table-cell;</span><br><span class="line"><span class="attribute">vertical-align</span>: middle;</span><br></pre></td></tr></table></figure></li><li><p>父元素高度auto,设置上下padding一致</p><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">padding</span>:  <span class="number">2px</span> <span class="number">0</span>;</span><br></pre></td></tr></table></figure></li></ol></blockquote><h2><span id="居中效果-背景图片">居中效果: 背景图片</span></h2><blockquote><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">background-position</span>: center;</span><br></pre></td></tr></table></figure></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 布局 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+  
+  
 </search>
