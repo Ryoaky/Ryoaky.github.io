@@ -158,7 +158,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -200,6 +200,162 @@
 
 
     <div class="main-inner index posts-expand">
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://ryoaky.github.io/2021/05/04/avascript%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Ryoaky">
+      <meta itemprop="description" content="落霞与孤鹜齐飞, 秋水共长天一色">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/05/04/avascript%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">javascript多线程</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-05-04 20:36:00 / 修改时间：20:37:01" itemprop="dateCreated datePublished" datetime="2021-05-04T20:36:00+08:00">2021-05-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="多线程">多线程</span></h1><blockquote>
+<p>在主线程代码中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = <span class="string">&quot;要向分线程发送的数据&quot;</span></span><br><span class="line"><span class="comment">//创建worker对象</span></span><br><span class="line"><span class="keyword">var</span> worker = <span class="keyword">new</span> Worker(<span class="string">&#x27;worker.js&#x27;</span>)</span><br><span class="line"><span class="comment">//设置监听事件</span></span><br><span class="line">worker.onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&#x27;接受到分线程的数据&#x27;</span>+ event.data)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//向分线程发送消息</span></span><br><span class="line">worker.postMessage(data)</span><br></pre></td></tr></table></figure>
+
+<p>在分线程代码中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> onmessage = <span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">&quot;从主线程接受到数据&quot;</span>+ event.data)</span><br><span class="line">    <span class="comment">//处理数据</span></span><br><span class="line">    postMessage(result)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://ryoaky.github.io/2021/05/04/avascript%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Ryoaky">
+      <meta itemprop="description" content="落霞与孤鹜齐飞, 秋水共长天一色">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/05/04/avascript%E7%BB%9F%E8%AE%A1%E4%BB%A3%E7%A0%81%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4/" class="post-title-link" itemprop="url">javascript统计代码运行时间</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-05-04 20:34:00 / 修改时间：20:35:12" itemprop="dateCreated datePublished" datetime="2021-05-04T20:34:00+08:00">2021-05-04</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/javascript/" itemprop="url" rel="index"><span itemprop="name">javascript</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="统计运行时间">统计运行时间</span></h1><blockquote>
+<ol>
+<li>使用console.time;</li>
+</ol>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//需要传入一个字符串作为计时器名字</span></span><br><span class="line"><span class="built_in">console</span>.time(<span class="string">&quot;spend&quot;</span>);</span><br><span class="line"><span class="comment">//编写语句</span></span><br><span class="line"><span class="built_in">console</span>.timeEnd(<span class="string">&quot;spend&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li><p>使用Date对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="comment">//待测试性能的代码</span></span><br><span class="line">   </span><br><span class="line"><span class="keyword">var</span> end = <span class="built_in">Date</span>.now();</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">&quot;执行了&quot;</span> + end-start + <span class="string">&quot;毫秒&quot;</span>);</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
 
     
 
