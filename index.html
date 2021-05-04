@@ -158,7 +158,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -209,6 +209,82 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://ryoaky.github.io/2021/05/04/avascript%E4%B8%ADthis%E7%9A%84%E5%8F%96%E5%80%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="Ryoaky">
+      <meta itemprop="description" content="落霞与孤鹜齐飞, 秋水共长天一色">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2021/05/04/avascript%E4%B8%ADthis%E7%9A%84%E5%8F%96%E5%80%BC/" class="post-title-link" itemprop="url">javascript中this的取值</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2021-05-04 20:28:00 / 修改时间：20:28:57" itemprop="dateCreated datePublished" datetime="2021-05-04T20:28:00+08:00">2021-05-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1><span id="javascript中this的取值">javascript中this的取值</span></h1><blockquote>
+<ol>
+<li><p>以函数的形式调用时，this都是window</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line">fun()</span><br></pre></td></tr></table></figure></li>
+<li><p>以方法的形式调用时，this就是调用方法的那个对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    fun: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">		alert(<span class="built_in">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.fun()</span><br></pre></td></tr></table></figure></li>
+<li><p>当以构造函数的形式调用时，this就是新创建的那个对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="function"><span class="title">Fun</span>(<span class="params">prop</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">this</span>.prop = prop</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> fun = <span class="keyword">new</span> Fun(<span class="string">&quot;prop&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+<li><p>以call()或者apply()调用时，this是在作为参数传入的对象</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    prop: <span class="string">&quot;属性&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">fun</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	alert(<span class="built_in">this</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fun.call(obj)</span><br></pre></td></tr></table></figure></li>
+</ol>
+</blockquote>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://ryoaky.github.io/2021/05/04/javascript%E5%BF%85%E9%A1%BB%E5%86%99%E5%88%86%E5%8F%B7%E7%9A%84%E6%83%85%E5%86%B5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -234,7 +310,7 @@
       <span class="post-meta-item-text">发表于</span>
       
 
-      <time title="创建时间：2021-05-04 20:04:55 / 修改时间：20:10:59" itemprop="dateCreated datePublished" datetime="2021-05-04T20:04:55+08:00">2021-05-04</time>
+      <time title="创建时间：2021-05-04 20:04:55 / 修改时间：20:31:26" itemprop="dateCreated datePublished" datetime="2021-05-04T20:04:55+08:00">2021-05-04</time>
     </span>
 
   
@@ -247,16 +323,15 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <span id="more"></span>
-<h1><span id="javascript不加分号">javascript不加分号</span></h1><blockquote>
-<ul>
-<li><p>小括号开头的前一条语句(即立即执行函数)</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">;(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  </span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure></li>
-<li><p>中括号开头的前一条语句</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">4</span></span><br><span class="line">;[<span class="number">1</span>,<span class="number">3</span>].forEach(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></li>
-</ul>
-</blockquote>
-
+          <h1 id="javascript必须加分号"><a href="#javascript必须加分号" class="headerlink" title="javascript必须加分号"></a>javascript必须加分号</h1>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/05/04/javascript%E5%BF%85%E9%A1%BB%E5%86%99%E5%88%86%E5%8F%B7%E7%9A%84%E6%83%85%E5%86%B5/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
